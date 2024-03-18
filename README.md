@@ -1,1 +1,1 @@
-alx-higher_level_programming: using python and javascript in shell
+A hash character within a string literal is just a hash character.
