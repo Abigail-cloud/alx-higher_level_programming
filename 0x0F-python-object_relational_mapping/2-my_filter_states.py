@@ -1,29 +1,27 @@
 #!/usr/bin/python3
+"""
+This script takes in an argument and
+displays all values in the states
+where `name` matches the argument
+from the database `hbtn_0e_0_usa`.
+"""
+
+import MySQLdb as db
 from sys import argv
-import MySQLdb
 
-
-def SQLconnect():
+if __name__ == '__main__':
     """
-    Conect to database
+    Access to the database and get the states
+    from the database.
     """
-    try:
-        db_connection = MySQLdb.connect(host="localhost", port=3306,
-                                        user=argv[1], password=argv[2],
-                                        db=argv[3], charset="utf8")
-    except Exception:
-        print("Can't connect to database")
-        return 0
-    cur = db_connection.cursor()
-    cur.execute("SELECT * FROM states WHERE name = '{name}' ORDER BY id ASC;"
-                .format(name=argv[4]))
-    query_rows = cur.fetchall()
-    for row in query_rows:
-        if row[1] == argv[4]:
-            print(row)
-    cur.close()
-    db_connection.close()
+    db_connect = db.connect(host="localhost", port=3306,
+                            user=argv[1], passwd=argv[2], db=argv[3])
+    db_cursor = db_connect.cursor()
 
+    db_cursor.execute(
+        "SELECT * FROM states WHERE name LIKE BINARY '{}' ORDER BY \
+                        states.id ASC".format(argv[4]))
+    rows_selected = db_cursor.fetchall()
 
-SQLconnect()
-
+    for row in rows_selected:
+        print(row)
